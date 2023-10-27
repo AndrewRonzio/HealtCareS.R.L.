@@ -10,12 +10,12 @@ namespace HealtCare.WebAPI.Controllers
 {
     public class UserController : ControllerBase
     {
-        private readonly IUnitOfWork _repo; 
+        private readonly IUnitOfWork _repo;
         private readonly Mapper _mapper;
 
 
 
-        public UserController(IUnitOfWork repo, Mapper mapper) 
+        public UserController(IUnitOfWork repo, Mapper mapper)
         {
             _mapper = mapper;
             _repo = repo;
@@ -23,35 +23,44 @@ namespace HealtCare.WebAPI.Controllers
 
 
 
-        //[HttpGet]
-        //[Route("GetSingle/{id}")]
-        //public async Task<IActionResult> GetSingle(string Id)
-        //{
-        //    User user = _repo.UserRepository.Get(Id);
+        [HttpGet]
+        [Route("GetSingle/{id}")]
+        public async Task<IActionResult> GetSingle(string Id)
+        {
+            User user = _repo.UserRepository.Get(Id);
 
-        //    return user != null ? Ok(_mapper.MapperEntityToModel(user)) : NotFound();
-        //}
-
-
-        //[HttpGet]
-        //[Route("GetAll")]
-
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    List<User> users = _repo.UserRepository.GetAll();
-        //    List<UserModel> models = new List<UserModel>();
-
-        //    users.ForEach(user => { models.Add(_mapper.MapperEntityToModel(user)); });
-        //    return Ok(users);
-        //}
+            return user != null ? Ok(_mapper.MapperEntityToModel(user)) : NotFound();
+        }
 
 
         [HttpGet]
-        [Route("Get")]
-        public IActionResult Get() 
+        [Route("GetAll")]
+
+        public async Task<IActionResult> GetAll()
         {
-            return Ok();
+            List<User> users = _repo.UserRepository.GetAll();
+            List<UserModel> models = new List<UserModel>();
+
+            users.ForEach(user => { models.Add(_mapper.MapperEntityToModel(user)); });
+            return Ok(users);
+        }
+
+
+
+        [HttpPost]
+        [Route("Register/{UserModel}")]
+        public async Task<IActionResult> Register([FromBody] UserModel UserModel)
+        {
+            List<User> users = _repo.UserRepository.GetAll();
+
+            if (users.Any(x => x.Email == UserModel.Email))
+                return BadRequest("Errore, Utente con questa mail già registrato");
+
+            _repo.UserRepository.Create()
+
 
         }
+
+
     }
 }

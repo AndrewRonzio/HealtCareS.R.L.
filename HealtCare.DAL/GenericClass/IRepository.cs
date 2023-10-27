@@ -12,5 +12,7 @@ namespace HealtCare.DAL.GenericClass
 
         List<T> GetAll();
 
+        T Create(T entity);
+
     }
 }

@@ -30,5 +30,13 @@ namespace HealtCare.DAL.GenericClass
             return _ctx.Set<T>().ToList();
         }
 
+
+        public T Create(T Entity)
+        {
+            _ctx.Add(Entity);
+            _ctx.SaveChanges();
+            return Entity;
+        }
+
     }
 }
