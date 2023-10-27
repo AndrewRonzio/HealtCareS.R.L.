@@ -29,7 +29,7 @@ namespace HealtCare.WebAPI.Controllers
         {
             User user = _repo.UserRepository.Get(Id);
 
-            return user != null ? Ok(_mapper.MapperEntityToModel(user)) : NotFound();
+            return user != null ? Ok(_mapper.MapEntityToModel(user)) : NotFound();
         }
 
 
@@ -41,7 +41,7 @@ namespace HealtCare.WebAPI.Controllers
             List<User> users = _repo.UserRepository.GetAll();
             List<UserModel> models = new List<UserModel>();
 
-            users.ForEach(user => { models.Add(_mapper.MapperEntityToModel(user)); });
+            users.ForEach(user => { models.Add(_mapper.MapEntityToModel(user)); });
             return Ok(users);
         }
 
@@ -56,8 +56,13 @@ namespace HealtCare.WebAPI.Controllers
             if (users.Any(x => x.Email == UserModel.Email))
                 return BadRequest("Errore, Utente con questa mail già registrato");
 
-            _repo.UserRepository.Create()
+            User user = new User
+            {
+                UserName = UserModel.Name,
+                Surname = UserModel.Surname,
+            }
 
+            _repo.UserRepository.Create()
 
         }
 
